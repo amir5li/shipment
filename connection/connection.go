@@ -4,13 +4,16 @@ import (
 	"context"
 	"fmt"
 	"os"
+
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var City *mongo.Collection
 var Province *mongo.Collection
+var Customer *mongo.Collection
 func init(){
 	godotenv.Load()
 	mongoURI := os.Getenv("MONGO_URI")
@@ -23,4 +26,12 @@ func init(){
 	db := client.Database(mongoDB)
 	City = db.Collection("cities")
 	Province = db.Collection("provinces")
+	Customer = db.Collection("customers")
+}
+// for test purpose
+func init(){
+	count, _ := Customer.CountDocuments(context.Background(), bson.M{})
+	if count == 0 {
+		Customer.InsertOne(context.TODO(), bson.M{"phone": "09107655173"})
+	}
 }
