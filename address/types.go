@@ -32,3 +32,19 @@ type AddressObj struct {
 	UserPhone string
 }
 
+type AddressInput struct {
+	CustomerFirstName string `json:"customerFirstName"`
+	CustomerLastName string `json:"customerLastName"`
+	CustomerNationalCode string `json:"customerNationalCode"`
+	ConsigneeIsCustomer bool `json:"isCustomer"`
+	ConsigneeFirstName string `json:"consigneeFirstName"`
+	ConsigneeLastName string `json:"consigneeLastName"`
+	ConsigneeNationalCode string `json:"consigneeNationalCode"`
+	ConsigneePhone string `json:"consigneePhone"`
+	AddressCity primitive.ObjectID `json:"city"`
+	AddressProvince primitive.ObjectID `json:"province"`
+	AddressPostalAddress string `json:"postalAddress"`
+	AddressPostalCode string `json:"postalCode"`
+	AddressUnit uint `json:"unit"`
+	AddressPlaque uint `json:"plaque"`
+}
