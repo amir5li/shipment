@@ -73,6 +73,14 @@ func (cei CheckCustomerEssentialInfo) Next(obj *AddressObj) *AddressObj {
 			updatedForm = append(updatedForm, section)
 		}
 	}
+	// 
+	injectingCustomerInfo := CustomerInfo{
+		FirstName: customerInfoValidation.FirstName,
+		LastName: customerInfoValidation.LastName,
+		NationalCode: customerInfoValidation.NationalCode,
+		Phone: obj.UserPhone,
+	}
+	obj.CustomerInfo = injectingCustomerInfo
 	obj.Form = updatedForm
 	if cei.NextChain != nil {
 		newObj := cei.NextChain.Next(obj)

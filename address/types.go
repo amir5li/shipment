@@ -24,11 +24,21 @@ type ShowAddressField struct {
 	ID primitive.ObjectID `json:"id"`
 }
 
+type CustomerInfo struct {
+	FirstName string
+	LastName string
+	Phone string
+	NationalCode string
+}
+
 type AddressObj struct {
 	Form []*AddressSection `json:"form"`
 	Action string `json:"action"`
 	SelectedAddressID primitive.ObjectID `json:"selectedAddressID"`
 	ShowAddresses []ShowAddressField `json:"showAddresses"`
+	AddressInput AddressInput
+	CustomerInfo CustomerInfo
+	NeedUpdateCustomerInfo bool
 	UserPhone string
 }
 
