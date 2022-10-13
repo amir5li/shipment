@@ -10,15 +10,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func SubmitAddAddress(c *gin.Context){
+func SubmitAddAddress(c *gin.Context) {
 	session := sessions.Default(c)
 	addrID := session.Get("addrID")
-	fmt.Println("myAddrID", addrID.(string))
+	fmt.Println("myAddrID", addrID)
 	var body address.AddressInput
 	c.Bind(&body)
 	res := address.SubmitAddAddress(c, body)
 	fmt.Println(res.SessionAddressID)
-	if res.SessionAddressID.Hex() != primitive.NilObjectID.Hex(){
+	if res.SessionAddressID.Hex() != primitive.NilObjectID.Hex() {
 		fmt.Println("im called")
 		session.Set("addrID", res.SessionAddressID.Hex())
 		session.Save()

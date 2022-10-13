@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main(){
+func main() {
 	// route := gin.Default()
 	// loc := route.Group("/loc")
 	// {
@@ -22,7 +22,7 @@ func main(){
 	// 	loc.POST("/cityList", locationHndl.GetCityList)
 	// }
 	r := gin.Default()
-	store, _ := redis.NewStore(10, "tcp", "localhost:6379","", []byte("secret"))
+	store, _ := redis.NewStore(10, "tcp", "localhost:6379", "", []byte("secret"))
 	// store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("customerInfo", store))
 	addr := r.Group("/address")
@@ -30,6 +30,9 @@ func main(){
 		addr.GET("/add", addressHndl.AddAddress)
 		addr.POST("/submit-add", addressHndl.SubmitAddAddress)
 		addr.POST("/edit", addressHndl.EditAddress)
+		addr.POST("/submit-edit", addressHndl.SubmitEditAddress)
+		addr.POST("/select", addressHndl.SelectAddress)
+		addr.GET("/list", addressHndl.ListAddresses)
 	}
 	// route.Run(":6000")
 	r.Run(":6500")

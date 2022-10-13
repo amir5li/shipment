@@ -5,6 +5,7 @@ import (
 	"github.com/amir5li/shipment/connection"
 	"github.com/amir5li/shipment/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type UpdateSelectedAddress struct {
@@ -20,11 +21,11 @@ func (usa UpdateSelectedAddress) Next(obj *AddressObj) *AddressObj {
 		findRes = connection.Province.FindOne(context.TODO(), bson.M{"_id": obj.AddressInput.AddressProvince})
 		findRes.Decode(&provinceDoc)
 		updatingCity := models.AddressCityAndProvince{
-			ID: obj.AddressInput.AddressCity,
+			ID:   obj.AddressInput.AddressCity,
 			Name: cityDoc.Name,
 		}
 		updatingProvince := models.AddressCityAndProvince{
-			ID: obj.AddressInput.AddressProvince,
+			ID:   obj.AddressInput.AddressProvince,
 			Name: provinceDoc.Name,
 		}
 		updatingConsignee := models.AddressConsignee{}
@@ -34,7 +35,7 @@ func (usa UpdateSelectedAddress) Next(obj *AddressObj) *AddressObj {
 			updatingConsignee.IsCustomer = true
 			updatingConsignee.NationalCode = obj.CustomerInfo.NationalCode
 			updatingConsignee.Phone = obj.CustomerInfo.Phone
-		}else{
+		} else {
 			updatingConsignee.IsCustomer = obj.AddressInput.ConsigneeIsCustomer
 			updatingConsignee.FirstName = obj.AddressInput.ConsigneeFirstName
 			updatingConsignee.LastName = obj.AddressInput.ConsigneeLastName
@@ -42,11 +43,11 @@ func (usa UpdateSelectedAddress) Next(obj *AddressObj) *AddressObj {
 			updatingConsignee.Phone = obj.AddressInput.ConsigneePhone
 		}
 		updatingPostalAddress := models.PostalAddress{
-			Address: obj.AddressInput.AddressPostalAddress,
+			Address:    obj.AddressInput.AddressPostalAddress,
 			PostalCode: obj.AddressInput.AddressPostalCode,
-			Plaque: obj.AddressInput.AddressPlaque,
+			Plaque:     obj.AddressInput.AddressPlaque,
 		}
-		if obj.AddressInput.AddressUnit != 0{
+		if obj.AddressInput.AddressUnit != 0 {
 			updatingPostalAddress.Unit = obj.AddressInput.AddressUnit
 		}
 		connection.Customer.UpdateOne(
@@ -54,12 +55,17 @@ func (usa UpdateSelectedAddress) Next(obj *AddressObj) *AddressObj {
 			bson.M{"phone": obj.UserPhone},
 			bson.M{
 				"$set": bson.M{
-					"addresses.$[targetAddr].city": updatingCity,
-					"addresses.$[targetAddr].province": updatingProvince,
+					"addresses.$[targetAddr].city":          updatingCity,
+					"addresses.$[targetAddr].province":      updatingProvince,
 					"addresses.$[targetAddr].postalAddress": updatingPostalAddress,
-					"addresses.$[targetAddr].consignee": updatingConsignee,
+					"addresses.$[targetAddr].consignee":     updatingConsignee,
 				},
 			},
+			options.Update().SetArrayFilters(options.ArrayFilters{
+				Filters: bson.A{
+					bson.M{"targetAddr._id": obj.SelectedAddressID},
+				},
+			}),
 		)
 	}
 	if usa.NextChain != nil {

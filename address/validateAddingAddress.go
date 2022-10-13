@@ -1,25 +1,27 @@
 package address
 
+import "fmt"
 
 type ValidateAddingAddress struct {
 	NextChain AddressChain
 }
 
 func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
-	type fieldData struct{
+	type fieldData struct {
 		FieldName string
-		ErrMsg *string
-		Value interface{}
-
+		ErrMsg    *string
+		Value     interface{}
 	}
 	var fiedsInfo []fieldData
 	// validate customer fields
+	fmt.Println(obj.NeedUpdateCustomerInfo)
 	if obj.NeedUpdateCustomerInfo {
 		// customer first name
 		firstNameErr := _validateRawText(obj.AddressInput.CustomerFirstName)
+		fmt.Println("firstNameErr: ", firstNameErr)
 		var field = fieldData{
 			FieldName: CustomerFirstNameFieldName,
-			Value: obj.AddressInput.CustomerFirstName,
+			Value:     obj.AddressInput.CustomerFirstName,
 		}
 		if firstNameErr != nil {
 			errMsg := firstNameErr.Error()
@@ -30,7 +32,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 		lastNameErr := _validateRawText(obj.AddressInput.CustomerLastName)
 		field = fieldData{
 			FieldName: CustomerLastNameFieldName,
-			Value: obj.AddressInput.CustomerLastName,
+			Value:     obj.AddressInput.CustomerLastName,
 		}
 		if lastNameErr != nil {
 			errMsg := lastNameErr.Error()
@@ -41,7 +43,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 		nationalCodeErr := _validateNationalCodeCustomer(obj.AddressInput.CustomerNationalCode)
 		field = fieldData{
 			FieldName: CustomerNationalCodeFieldName,
-			Value: obj.AddressInput.CustomerNationalCode,
+			Value:     obj.AddressInput.CustomerNationalCode,
 		}
 		if nationalCodeErr != nil {
 			errMsg := nationalCodeErr.Error()
@@ -53,14 +55,14 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	if obj.AddressInput.ConsigneeIsCustomer {
 		if obj.NeedUpdateCustomerInfo {
 			for _, field := range fiedsInfo {
-				switch field.FieldName{
+				switch field.FieldName {
 				case CustomerFirstNameFieldName:
 					var newField = field
 					newField.FieldName = ConsigneeFirstNameFieldName
 				}
 			}
-		}else{
-			for _, sec := range obj.Form{
+		} else {
+			for _, sec := range obj.Form {
 				if sec.Title == ConsigneeSectionTitle {
 					for _, field := range sec.Fields {
 						switch field.Name {
@@ -77,11 +79,11 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 				}
 			}
 		}
-	}else{
+	} else {
 		firstNameErr := _validateRawText(obj.AddressInput.ConsigneeFirstName)
 		field := fieldData{
 			FieldName: ConsigneeFirstNameFieldName,
-			Value: obj.AddressInput.ConsigneeFirstName,
+			Value:     obj.AddressInput.ConsigneeFirstName,
 		}
 		if firstNameErr != nil {
 			errMsg := firstNameErr.Error()
@@ -91,7 +93,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 		lastNameErr := _validateRawText(obj.AddressInput.ConsigneeLastName)
 		field = fieldData{
 			FieldName: ConsigneeLastNameFieldName,
-			Value: obj.AddressInput.ConsigneeLastName,
+			Value:     obj.AddressInput.ConsigneeLastName,
 		}
 		if lastNameErr != nil {
 			errMsg := lastNameErr.Error()
@@ -101,7 +103,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 		nationalCodeErr := _validateNationalCodeConsignee(obj.AddressInput.ConsigneeNationalCode)
 		field = fieldData{
 			FieldName: ConsigneeNationalCodeFieldName,
-			Value: obj.AddressInput.ConsigneeNationalCode,
+			Value:     obj.AddressInput.ConsigneeNationalCode,
 		}
 		if nationalCodeErr != nil {
 			errMsg := nationalCodeErr.Error()
@@ -111,7 +113,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 		phone, phoneErr := _validatePhone(obj.AddressInput.ConsigneePhone)
 		field = fieldData{
 			FieldName: ConsigneePhoneFieldName,
-			Value: phone,
+			Value:     phone,
 		}
 		if phoneErr != nil {
 			errMsg := phoneErr.Error()
@@ -125,7 +127,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	postalAddressErr := _validateAddressPostal(obj.AddressInput.AddressPostalAddress)
 	field := fieldData{
 		FieldName: AddressPostalAddressFieldName,
-		Value: obj.AddressInput.AddressPostalAddress,
+		Value:     obj.AddressInput.AddressPostalAddress,
 	}
 	if postalAddressErr != nil {
 		errMsg := postalAddressErr.Error()
@@ -136,7 +138,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	postalCodeErr := _validateAddressPostalCode(obj.AddressInput.AddressPostalCode)
 	field = fieldData{
 		FieldName: AddressPostalCodeFieldName,
-		Value: obj.AddressInput.AddressPostalCode,
+		Value:     obj.AddressInput.AddressPostalCode,
 	}
 	if postalAddressErr != nil {
 		errMsg := postalCodeErr.Error()
@@ -147,7 +149,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	provinceErr := _validateAddressProvince(obj.AddressInput.AddressProvince)
 	field = fieldData{
 		FieldName: AddressProvinceFieldName,
-		Value: obj.AddressInput.AddressProvince,
+		Value:     obj.AddressInput.AddressProvince,
 	}
 	if provinceErr != nil {
 		errMsg := provinceErr.Error()
@@ -158,7 +160,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	cityErr := _validateAddressCity(obj.AddressInput.AddressCity, obj.AddressInput.AddressProvince)
 	field = fieldData{
 		FieldName: AddressCityFieldName,
-		Value: obj.AddressInput.AddressCity,
+		Value:     obj.AddressInput.AddressCity,
 	}
 	if cityErr != nil {
 		errMsg := cityErr.Error()
@@ -168,13 +170,13 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	// unit
 	field = fieldData{
 		FieldName: AddressUnitFieldName,
-		Value: obj.AddressInput.AddressUnit,
+		Value:     obj.AddressInput.AddressUnit,
 	}
 	fiedsInfo = append(fiedsInfo, field)
 	//plaque
 	field = fieldData{
 		FieldName: AddressPlaqueFieldName,
-		Value: obj.AddressInput.AddressPlaque,
+		Value:     obj.AddressInput.AddressPlaque,
 	}
 	fiedsInfo = append(fiedsInfo, field)
 	var updateCustomerInfo = obj.NeedUpdateCustomerInfo
@@ -187,7 +189,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 			addNewAddress = false
 		}
 		for _, sec := range obj.Form {
-			for _, inputField := range sec.Fields{
+			for _, inputField := range sec.Fields {
 				if inputField.Name == field.FieldName {
 					inputField.Value = field.Value
 					inputField.Error = field.ErrMsg
@@ -198,7 +200,7 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 	obj.UpdateCustomerInfo = updateCustomerInfo
 	obj.AddNewAddress = addNewAddress
 	obj.UpdateSelectedAddress = canUpdateSelectedAddress
-	if (va.NextChain != nil){
+	if va.NextChain != nil {
 		newObj := va.NextChain.Next(obj)
 		return newObj
 	}

@@ -11,8 +11,8 @@ type GetCustomerAddresses struct {
 }
 
 func (gca GetCustomerAddresses) Next(obj *AddressObj) *AddressObj {
-	var aggRes []struct{
-		ConciseAddresses []ConciseAddress `bson:"conciseAddresses"`
+	var aggRes []struct {
+		ConciseAddresses []*ConciseAddress `bson:"conciseAddresses"`
 	}
 	aggDecoding, _ := connection.Customer.Aggregate(
 		context.TODO(),
@@ -27,7 +27,7 @@ func (gca GetCustomerAddresses) Next(obj *AddressObj) *AddressObj {
 					"conciseAddresses": bson.M{
 						"$map": bson.M{
 							"input": "$addresses",
-							"in":bson.M{
+							"in": bson.M{
 								"addr": bson.M{
 									"$concat": bson.A{
 										"$$this.province.name",
@@ -59,7 +59,7 @@ func (gca GetCustomerAddresses) Next(obj *AddressObj) *AddressObj {
 			},
 			bson.M{
 				"$project": bson.M{
-					"_id": 0,
+					"_id":              0,
 					"conciseAddresses": 1,
 				},
 			},
