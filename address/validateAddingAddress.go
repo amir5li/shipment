@@ -1,5 +1,6 @@
 package address
 
+
 type ValidateAddingAddress struct {
 	NextChain AddressChain
 }
@@ -97,5 +98,109 @@ func (va ValidateAddingAddress) Next(obj *AddressObj) *AddressObj {
 			field.ErrMsg = &errMsg
 		}
 		fiedsInfo = append(fiedsInfo, field)
+		nationalCodeErr := _validateNationalCodeConsignee(obj.AddressInput.ConsigneeNationalCode)
+		field = fieldData{
+			FieldName: ConsigneeNationalCodeFieldName,
+			Value: obj.AddressInput.ConsigneeNationalCode,
+		}
+		if nationalCodeErr != nil {
+			errMsg := nationalCodeErr.Error()
+			field.ErrMsg = &errMsg
+		}
+		fiedsInfo = append(fiedsInfo, field)
+		phone, phoneErr := _validatePhone(obj.AddressInput.ConsigneePhone)
+		field = fieldData{
+			FieldName: ConsigneePhoneFieldName,
+			Value: phone,
+		}
+		if phoneErr != nil {
+			errMsg := phoneErr.Error()
+			field.ErrMsg = &errMsg
+			field.Value = obj.AddressInput.ConsigneePhone
+		}
+		fiedsInfo = append(fiedsInfo, field)
 	}
+	// validate Address Input
+	// address
+	postalAddressErr := _validateAddressPostal(obj.AddressInput.AddressPostalAddress)
+	field := fieldData{
+		FieldName: AddressPostalAddressFieldName,
+		Value: obj.AddressInput.AddressPostalAddress,
+	}
+	if postalAddressErr != nil {
+		errMsg := postalAddressErr.Error()
+		field.ErrMsg = &errMsg
+	}
+	fiedsInfo = append(fiedsInfo, field)
+	// postal code
+	postalCodeErr := _validateAddressPostalCode(obj.AddressInput.AddressPostalCode)
+	field = fieldData{
+		FieldName: AddressPostalCodeFieldName,
+		Value: obj.AddressInput.AddressPostalCode,
+	}
+	if postalAddressErr != nil {
+		errMsg := postalCodeErr.Error()
+		field.ErrMsg = &errMsg
+	}
+	fiedsInfo = append(fiedsInfo, field)
+	// province
+	provinceErr := _validateAddressProvince(obj.AddressInput.AddressProvince)
+	field = fieldData{
+		FieldName: AddressProvinceFieldName,
+		Value: obj.AddressInput.AddressProvince,
+	}
+	if provinceErr != nil {
+		errMsg := provinceErr.Error()
+		field.ErrMsg = &errMsg
+	}
+	fiedsInfo = append(fiedsInfo, field)
+	// city
+	cityErr := _validateAddressCity(obj.AddressInput.AddressCity, obj.AddressInput.AddressProvince)
+	field = fieldData{
+		FieldName: AddressCityFieldName,
+		Value: obj.AddressInput.AddressCity,
+	}
+	if cityErr != nil {
+		errMsg := cityErr.Error()
+		field.ErrMsg = &errMsg
+	}
+	fiedsInfo = append(fiedsInfo, field)
+	// unit
+	field = fieldData{
+		FieldName: AddressUnitFieldName,
+		Value: obj.AddressInput.AddressUnit,
+	}
+	fiedsInfo = append(fiedsInfo, field)
+	//plaque
+	field = fieldData{
+		FieldName: AddressPlaqueFieldName,
+		Value: obj.AddressInput.AddressPlaque,
+	}
+	fiedsInfo = append(fiedsInfo, field)
+	var updateCustomerInfo = obj.NeedUpdateCustomerInfo
+	var canUpdateSelectedAddress = true
+	var addNewAddress = true
+	for _, field := range fiedsInfo {
+		if field.ErrMsg != nil {
+			updateCustomerInfo = false
+			canUpdateSelectedAddress = false
+			addNewAddress = false
+		}
+		for _, sec := range obj.Form {
+			for _, inputField := range sec.Fields{
+				if inputField.Name == field.FieldName {
+					inputField.Value = field.Value
+					inputField.Error = field.ErrMsg
+				}
+			}
+		}
+	}
+	obj.UpdateCustomerInfo = updateCustomerInfo
+	obj.AddNewAddress = addNewAddress
+	obj.UpdateSelectedAddress = canUpdateSelectedAddress
+	if (va.NextChain != nil){
+		newObj := va.NextChain.Next(obj)
+		return newObj
+	}
+	return obj
 }

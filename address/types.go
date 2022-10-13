@@ -33,12 +33,17 @@ type CustomerInfo struct {
 
 type AddressObj struct {
 	Form []*AddressSection `json:"form"`
-	Action string `json:"action"`
+	ConciseAddresses []ConciseAddress `json:"addresses"`
 	SelectedAddressID primitive.ObjectID `json:"selectedAddressID"`
+	InsertedAddressID primitive.ObjectID 
+	SessionAddressID primitive.ObjectID 
 	ShowAddresses []ShowAddressField `json:"showAddresses"`
 	AddressInput AddressInput
 	CustomerInfo CustomerInfo
 	NeedUpdateCustomerInfo bool
+	UpdateCustomerInfo bool
+	UpdateSelectedAddress bool
+	AddNewAddress bool
 	UserPhone string
 }
 
@@ -57,4 +62,18 @@ type AddressInput struct {
 	AddressPostalCode string `json:"postalCode"`
 	AddressUnit uint `json:"unit"`
 	AddressPlaque uint `json:"plaque"`
+}
+
+type ConciseAddress struct {
+	Address string `bson:"addr" json:"address"`
+	ID primitive.ObjectID `bson:"id" json:"id"`
+}
+
+type EditAddressInput struct {
+	SelectedAddress primitive.ObjectID `json:"selectedAddress"`
+}
+
+type SubmitEditAddressInput struct {
+	SelectedAddressID primitive.ObjectID `json:"selectedAddress"`
+	AddressInput AddressInput `json:"addressInput"`
 }

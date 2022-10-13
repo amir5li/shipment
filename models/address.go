@@ -17,11 +17,12 @@ type AddressConsignee struct {
 }
 type PostalAddress struct {
 	Plaque uint `bson:"plaque"`
-	Unit uint `bson:"unit"`
+	Unit uint `bson:"unit,omitempty"`
 	PostalCode string `bson:"postalCode"`
 	Address string `bson:"address"`
 }
 type Address struct {
+	ID primitive.ObjectID `bson:"_id"`
 	Province AddressCityAndProvince `bson:"province"`	
 	City AddressCityAndProvince `bson:"city"`
 	PostalAddress PostalAddress  `bson:"postalAddress"`
