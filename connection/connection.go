@@ -14,6 +14,7 @@ import (
 var City *mongo.Collection
 var Province *mongo.Collection
 var Customer *mongo.Collection
+var ShippingMethod *mongo.Collection
 func init(){
 	godotenv.Load()
 	mongoURI := os.Getenv("MONGO_URI")
@@ -27,6 +28,7 @@ func init(){
 	City = db.Collection("cities")
 	Province = db.Collection("provinces")
 	Customer = db.Collection("customers")
+	ShippingMethod = db.Collection("shippingMethods")
 }
 // for test purpose
 func init(){
