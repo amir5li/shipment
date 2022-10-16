@@ -15,6 +15,7 @@ var City *mongo.Collection
 var Province *mongo.Collection
 var Customer *mongo.Collection
 var ShippingMethod *mongo.Collection
+var Basket *mongo.Collection
 func init(){
 	godotenv.Load()
 	mongoURI := os.Getenv("MONGO_URI")
@@ -29,6 +30,7 @@ func init(){
 	Province = db.Collection("provinces")
 	Customer = db.Collection("customers")
 	ShippingMethod = db.Collection("shippingMethods")
+	Basket = db.Collection("baskets")
 }
 // for test purpose
 func init(){
