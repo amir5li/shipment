@@ -17,10 +17,15 @@ func CreateShippingMethod(ctx context.Context, inp CreateMethodInput) (*Res, err
 	if titleErr != nil {
 		return nil, titleErr
 	}
+	priorityErr := _validatePriority(inp.Priority)
+	if priorityErr != nil {
+		return nil, priorityErr
+	}
 	insertingMethod := models.ShipmentMethod{
 		ID: primitive.NewObjectID(),
 		Name: inp.Name,
 		Title: inp.Title,
+		Priority: inp.Priority,
 		Description: inp.Description,
 		ValidCities: []primitive.ObjectID{},
 		PricePlans: []models.PricePlan{},

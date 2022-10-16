@@ -36,6 +36,7 @@ type ShipmentMethod struct {
 	ID primitive.ObjectID `bson:"_id"`
 	Name string `bson:"name"`
 	Title string `bson:"title"`
+	Priority uint `bson:"priority"`
 	Description string `bson:"description"`
 	ValidCities []primitive.ObjectID `bson:"validCities"`
 	PricePlans []PricePlan `bson:"pricePlans"`

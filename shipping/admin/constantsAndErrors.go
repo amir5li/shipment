@@ -16,6 +16,7 @@ const (
 	InvalidMaxWeigth ShippingAdminErr = "invalid maximum weight inserted"
 	InvalidPrice ShippingAdminErr = "invalid price inserted"
 	ConflictTimingBasket ShippingAdminErr = "inserted timing basket is invalid"
+	DuplicatePriority ShippingAdminErr = "inserted priority used for another shipping method"
 )
 
 var Messages = struct {

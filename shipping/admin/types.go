@@ -6,6 +6,7 @@ type CreateMethodInput struct {
 	Name string `json:"name"`
 	Title string `json:"title"`
 	Description string `json:"description"`
+	Priority uint `json:"priority"`
 }
 
 type AddPricePlanInput struct {

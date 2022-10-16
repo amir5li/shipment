@@ -126,3 +126,11 @@ func _validateTimingBasket(hour uint, minute uint, pairedHour uint, pairedMinute
 	}
 	return nil
 }
+
+func _validatePriority(p uint) error{
+	cnt, _ := connection.ShippingMethod.CountDocuments(context.TODO(), bson.M{"priority": p})
+	if cnt != 0 {
+		return DuplicatePriority
+	}
+	return nil
+}
