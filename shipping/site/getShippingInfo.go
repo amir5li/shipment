@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetShippingInfo(c *gin.Context, inp GetShippingDataInput)(interface{}, error){
+func GetShippingInfo(c *gin.Context, inp GetShippingDataInput) (interface{}, error) {
 	session := sessions.Default(c)
 	addrIDHex := session.Get("addrID")
 	var addrID primitive.ObjectID
@@ -18,7 +18,7 @@ func GetShippingInfo(c *gin.Context, inp GetShippingDataInput)(interface{}, erro
 	}
 	addrID, err := primitive.ObjectIDFromHex(addrIDHex.(string))
 	testCustomerID, _ := primitive.ObjectIDFromHex("62952f08b718fa718218f170")
-	fmt.Println(addrID, err)
+	fmt.Println("address", addrID, err)
 	methods, err := providers.GetValidMethods(c, testCustomerID, addrID)
 	if err != nil {
 		return nil, err

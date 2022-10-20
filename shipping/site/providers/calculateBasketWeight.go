@@ -28,8 +28,10 @@ func calculateBasketWeight(ctx context.Context, customerID primitive.ObjectID) u
 		ctx,
 		bson.A{
 			bson.M{
-				"variations._id": bson.M{
-					"$in": varIDs,
+				"$match": bson.M{
+					"variations._id": bson.M{
+						"$in": varIDs,
+					},
 				},
 			},
 			bson.M{

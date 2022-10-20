@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -13,8 +13,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
+
 var g errgroup.Group
-func siteRouter() http.Handler{
+
+func siteRouter() http.Handler {
 	r := gin.Default()
 	store, _ := redis.NewStore(10, "tcp", "localhost:6379", "", []byte("secret"))
 	// store := cookie.NewStore([]byte("secret"))
@@ -51,32 +53,32 @@ func adminRouter() http.Handler {
 }
 func main() {
 	siteServer := &http.Server{
-		Addr: ":6500",
-		Handler: siteRouter(),
+		Addr:         ":6500",
+		Handler:      siteRouter(),
 		WriteTimeout: 5 * time.Second,
-		ReadTimeout: 5 * time.Second,
+		ReadTimeout:  5 * time.Second,
 	}
 	adminServer := &http.Server{
-		Addr: ":6800",
-		Handler: adminRouter(),
+		Addr:         ":6800",
+		Handler:      adminRouter(),
 		WriteTimeout: 5 * time.Second,
-		ReadTimeout: 5 * time.Second,
+		ReadTimeout:  5 * time.Second,
 	}
 	g.Go(func() error {
-       err := siteServer.ListenAndServe()
-	   if err != nil && err != http.ErrServerClosed {
-		   log.Fatal(err)
-	   }
-	   return err
+		err := siteServer.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			fmt.Println("myErr", err)
+		}
+		return err
 	})
 	g.Go(func() error {
 		err := adminServer.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 		return err
 	})
 	if err := g.Wait(); err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 }
