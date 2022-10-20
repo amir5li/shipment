@@ -4,17 +4,16 @@ import (
 	"context"
 
 	"github.com/amir5li/shipment/connection"
-	"github.com/amir5li/shipment/shipping/site"
 	"github.com/amir5li/shipment/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight uint)[]shippingSite.ValidMethod{
+func getValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight uint)[]ValidMethod{
 	var allMethods []models.ShipmentMethod
 	aggDec, _ := connection.ShippingMethod.Aggregate(ctx, bson.A{})
 	aggDec.All(ctx, &allMethods)
-	var validMethods []shippingSite.ValidMethod
+	var validMethods []ValidMethod
 	for _, method := range allMethods {
 		// validate city
 		var canFindCity bool
@@ -38,7 +37,7 @@ func GetValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight
 		if !canFindTargetWeight {
 			continue
 		}
-		validMethods = append(validMethods, shippingSite.ValidMethod{
+		validMethods = append(validMethods, ValidMethod{
 			Title: method.Title,
 			Priority: method.Priority,
 			Price: matchedPrice,

@@ -7,6 +7,7 @@ import (
 
 	addressHndl "github.com/amir5li/shipment/handlers/address"
 	"github.com/amir5li/shipment/handlers/shipping/admin"
+	"github.com/amir5li/shipment/handlers/shipping/site"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
@@ -26,6 +27,10 @@ func siteRouter() http.Handler{
 		addr.POST("/submit-edit", addressHndl.SubmitEditAddress)
 		addr.POST("/select", addressHndl.SelectAddress)
 		addr.GET("/list", addressHndl.ListAddresses)
+	}
+	shipping := r.Group("/shipping")
+	{
+		shipping.POST("/get", shippingSiteHndl.GetShippingInfo)
 	}
 	return r
 }

@@ -2,20 +2,24 @@ package providers
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/amir5li/shipment/connection"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CalculateCityOfSelectedAddress(ctx context.Context, customerID primitive.ObjectID, addressID primitive.ObjectID) primitive.ObjectID {
+func calculateCityOfSelectedAddress(ctx context.Context, customerID primitive.ObjectID, addressID primitive.ObjectID) primitive.ObjectID {
 	var aggRes []struct{
 		CityID primitive.ObjectID `bson:"cityID"`
 	}
-	aggDecoding, _ := connection.Customer.Aggregate(
+	aggDecoding, err := connection.Customer.Aggregate(
 		ctx, 
 		bson.A{
 			bson.M{
-				"$match": customerID,
+				"$match": bson.M{
+					"_id": customerID,
+				},
 			},
 			bson.M{
 				"$set": bson.M{
@@ -51,7 +55,10 @@ func CalculateCityOfSelectedAddress(ctx context.Context, customerID primitive.Ob
 			},
 		},
 	)
+	fmt.Println(err)
 	aggDecoding.All(ctx, &aggRes)
+	fmt.Println(err, "city", aggRes)
 	result := aggRes[0].CityID
+	fmt.Println("city")
 	return result
 }

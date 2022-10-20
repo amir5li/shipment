@@ -1,5 +1,4 @@
 package shippingSite
-
 type ShippingSiteErr string
 
 func (se ShippingSiteErr) Error() string {
@@ -7,5 +6,5 @@ func (se ShippingSiteErr) Error() string {
 }
 
 const (
-	InitialInfoTimeout ShippingSiteErr = "timeout in getting initial info"
+	AddressNotSelected ShippingSiteErr = "first select your address"
 )

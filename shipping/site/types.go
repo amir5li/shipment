@@ -1,10 +1,7 @@
 package shippingSite
 
-import "github.com/amir5li/shipment/models"
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
-type ValidMethod struct {
-	Title string
-	Priority uint
-	Price uint
-	Days []models.ShippingDay
+type GetShippingDataInput struct {
+	MethodID primitive.ObjectID `json:"methodID"`
 }
