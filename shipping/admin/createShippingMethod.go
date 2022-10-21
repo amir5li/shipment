@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateShippingMethod(ctx context.Context, inp CreateMethodInput) (*Res, error){
+func CreateShippingMethod(ctx context.Context, inp CreateMethodInput) (*Res, error) {
 	nameErr := _validateNameOrTitle(inp.Name, primitive.NilObjectID)
 	if nameErr != nil {
 		return nil, nameErr
@@ -22,13 +22,14 @@ func CreateShippingMethod(ctx context.Context, inp CreateMethodInput) (*Res, err
 		return nil, priorityErr
 	}
 	insertingMethod := models.ShipmentMethod{
-		ID: primitive.NewObjectID(),
-		Name: inp.Name,
-		Title: inp.Title,
-		Priority: inp.Priority,
-		Description: inp.Description,
-		ValidCities: []primitive.ObjectID{},
-		PricePlans: []models.PricePlan{},
+		ID:           primitive.NewObjectID(),
+		Name:         inp.Name,
+		Title:        inp.Title,
+		Priority:     inp.Priority,
+		Description:  inp.Description,
+		Physical:     inp.Physical,
+		ValidCities:  []primitive.ObjectID{},
+		PricePlans:   []models.PricePlan{},
 		ShippingDays: initialShippingDays,
 	}
 	_, err := connection.ShippingMethod.InsertOne(
@@ -38,5 +39,5 @@ func CreateShippingMethod(ctx context.Context, inp CreateMethodInput) (*Res, err
 	if err != nil {
 		return nil, DBError
 	}
-	return &Res{Messages.SuccessMsg,Messages.SuccessCode}, nil
+	return &Res{Messages.SuccessMsg, Messages.SuccessCode}, nil
 }

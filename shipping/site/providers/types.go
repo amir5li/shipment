@@ -5,9 +5,15 @@ import (
 )
 
 type ValidMethod struct {
-	Title string
+	Title    string
 	Priority uint
-	Price uint
-	Days []models.ShippingDay
+	Price    uint
+	Physical bool
+	Days     []models.ShippingDay
 }
 
+type SelectedMethods struct {
+	Regular  *ValidMethod
+	Physical *ValidMethod
+	Overall  *ValidMethod
+}

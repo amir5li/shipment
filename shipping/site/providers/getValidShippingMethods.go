@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func getValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight uint)[]ValidMethod{
+func getValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight uint) []ValidMethod {
 	var allMethods []models.ShipmentMethod
 	aggDec, _ := connection.ShippingMethod.Aggregate(ctx, bson.A{})
 	aggDec.All(ctx, &allMethods)
@@ -18,7 +18,7 @@ func getValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight
 		// validate city
 		var canFindCity bool
 		for _, city := range method.ValidCities {
-			if city.Hex() == cityID.Hex(){
+			if city.Hex() == cityID.Hex() {
 				canFindCity = true
 			}
 		}
@@ -38,10 +38,11 @@ func getValidMethods(ctx context.Context, cityID primitive.ObjectID, totalWeight
 			continue
 		}
 		validMethods = append(validMethods, ValidMethod{
-			Title: method.Title,
+			Title:    method.Title,
 			Priority: method.Priority,
-			Price: matchedPrice,
-			Days: method.ShippingDays,
+			Price:    matchedPrice,
+			Physical: method.Physical,
+			Days:     method.ShippingDays,
 		})
 	}
 	return validMethods

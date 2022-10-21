@@ -8,4 +8,5 @@ func (se ProviderErr) Error() string {
 
 const (
 	InitialInfoTimeout ProviderErr = "timeout in getting initial info"
+	NoMethodFound      ProviderErr = "no methods can deliver order please change your basket"
 )
